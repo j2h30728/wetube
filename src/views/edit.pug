@@ -1,5 +1,10 @@
-extends base.pug
+ 에서 name 을 빠뜨리고 post 요청 보내면 req.body에서 데이터를 볼 수 없음extends base.pug
 
+block content
+  h4 Change Title of video
 
-block content 
-    h1 Edit Video
+  form(method="POST")
+    input(name="title", placeholder="Video Title", value=video.title, required)
+    input(value="Save", type="Submit")
+
+//- input
