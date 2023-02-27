@@ -8,7 +8,7 @@
     "url": "git+https://github.com/j2h30728/wetube.git"
   },
   "scripts": {
-    "dev": "nodemon --exec babel-node src/server.js"
+    "dev": "nodemon --exec babel-node src/init.js"
   },
   "author": "",
   "license": "MIT",
