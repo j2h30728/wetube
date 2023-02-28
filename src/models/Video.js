@@ -12,11 +12,16 @@ const videoSchema = new mongoose.Schema({
 });
 
 // model 이 만들어 지기 전에 미들웨어를 만들어야함
-videoSchema.pre("save", async function () {
-  this.hashtags = this.hashtags[0]
+// videoSchema.static("formatHashTags", function (hashtags) {
+//   return hashtags
+//     .split(",")
+//     .map(word => (word.startsWith("#") ? word : `#${word}`));
+// });
+videoSchema.statics.formatHashTags = function (hashtags) {
+  return hashtags
     .split(",")
     .map(word => (word.startsWith("#") ? word : `#${word}`));
-});
+};
 
 const Video = mongoose.model("Video", videoSchema);
 export default Video;
