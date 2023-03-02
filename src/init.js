@@ -1,5 +1,6 @@
 import "./db"; //connect to mongo
 import "./models/Video";
+import "./models/User";
 import app from "./server";
 
 const PORT = 4000;
