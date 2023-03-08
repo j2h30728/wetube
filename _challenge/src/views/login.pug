@@ -1,0 +1,9 @@
+extends templates/layout
+
+block content
+  if (errorMassge)
+    p= errorMassge
+  form(method="POST")
+    input(name="username", type="text", placeholder="Username", reqruied)
+    input(name="password", type="password", placeholder="Password", reqruied)
+    input(type="submit", value="LOGIN")
