@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
+//소셜로그인 시에는 비밀번호가 없기 때문
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  socailOnly: { type: Boolean, default: false },
+  password: { type: String },
   name: { type: String, required: true },
   location: String,
 });

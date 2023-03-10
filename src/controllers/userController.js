@@ -121,13 +121,31 @@ export const finishGithubLogin = async (req, res) => {
       })
     ).json();
     //이메일 리스트 배열을 순회해서 primary와 verified값이 true 인 email 검색
-    const email = emailData.find(
+    const emailObj = emailData.find(
       email => email.primary === true && email.verified === true
     );
-
     //유효한 이메일이 없다면 로그인창에 에러메시지와 함게 리다이렉트
-    if (!email) {
+    if (!emailObj) {
       return res.redirect("/login");
+    }
+    const existingUser = await User.findOne({ email: emailObj.email });
+    if (existingUser) {
+      req.session.loggedIn = true;
+      req.session.user = existingUser;
+      return res.redirect("/");
+    } else {
+      // 데이터베이스에 동일한 이메일을 가진 유저가 없을 경우(실제 회원가입/소셜로그인까지 합한것)
+      const newUser = await User.create({
+        name: userData.name ? userData.name : userData.login,
+        username: userData.login,
+        email: emailObj.email,
+        password: "",
+        socialOnly: true,
+        location: userData.location,
+      });
+      req.session.loggedIn = true;
+      req.session.user = newUser;
+      return res.redirect("/");
     }
   } else {
     //엑세스 토큰을 받지못할 경우,
