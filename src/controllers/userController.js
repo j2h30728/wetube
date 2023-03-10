@@ -75,33 +75,62 @@ export const startGithubLogin = (req, res) => {
   const finalUrl = `${baseUrl}?${params}`;
   return res.redirect(finalUrl);
 };
+
+// 사용자가 정보요청 수락시 실행
 export const finishGithubLogin = async (req, res) => {
   const baseUrl = "https://github.com/login/oauth/access_token";
   const config = {
     client_id: process.env.GH_CLIENT,
     client_secret: process.env.GH_SECRET,
-    code: req.query.code,
+    code: req.query.code, // 요청 수락시 만료기간이 존재하는 임시 code를 query로 줌
   };
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
-  const tokenData = await fetch(finalUrl, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-    },
-  });
-  const tokenRequest = await tokenData.json();
+
+  // access token 받기
+  const tokenRequest = await (
+    await fetch(finalUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+  ).json();
+
+  // access token 받는 것을 성공할 경우
   if ("access_token" in tokenRequest) {
     const { access_token } = tokenRequest;
-    const userInfoData = await fetch("https://api.github.com/user", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-    const userRequest = await userInfoData.json();
-    console.log(userRequest);
+    const apiUrl = "https://api.github.com";
+
+    //userdata 를 받아옴
+    const userData = await (
+      await fetch(`${apiUrl}/user`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+    ).json();
+
+    //private로 설정되어 userdata에서 받아오지못한 email을 해당 코드를 통해, email list를 불러옴
+    const emailData = await (
+      await fetch(`${apiUrl}/user/emails`, {
+        headers: {
+          Authorization: `token ${access_token}`,
+        },
+      })
+    ).json();
+    //이메일 리스트 배열을 순회해서 primary와 verified값이 true 인 email 검색
+    const email = emailData.find(
+      email => email.primary === true && email.verified === true
+    );
+
+    //유효한 이메일이 없다면 로그인창에 에러메시지와 함게 리다이렉트
+    if (!email) {
+      return res.redirect("/login");
+    }
   } else {
+    //엑세스 토큰을 받지못할 경우,
     return res.redirect("/login");
   }
 };
