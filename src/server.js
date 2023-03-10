@@ -19,10 +19,13 @@ app.use(express.urlencoded({ extended: true })); // application/x-www-form-urlen
 
 app.use(
   session({
-    secret: "Hello!",
+    secret: process.env.COOKIE_SECRET,
     resave: false, // 세션이 수정되면 데이터베이스에 업데이트함
     saveUninitialized: false, // 세션이 초기화되면 데이터베이스에 저장함
-    store: MongoStore.create({ mongoUrl: "mongodb://127.0.0.1:27017/wetube" }),
+    cookie: {
+      maxAge: 20000, //20초 뒤에 쿠키가 만료됨 === 자동 로그아웃
+    },
+    store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
   })
 );
 app.use(localsMiddleware);
