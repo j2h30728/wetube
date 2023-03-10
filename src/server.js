@@ -5,6 +5,7 @@ import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
 import session from "express-session";
 import { localsMiddleware } from "./routers/middlewares";
+import MongoStore from "connect-mongo";
 
 const app = express();
 const logger = morgan("dev");
@@ -19,8 +20,9 @@ app.use(express.urlencoded({ extended: true })); // application/x-www-form-urlen
 app.use(
   session({
     secret: "Hello!",
-    resave: true,
-    saveUninitialized: true,
+    resave: false, // 세션이 수정되면 데이터베이스에 업데이트함
+    saveUninitialized: false, // 세션이 초기화되면 데이터베이스에 저장함
+    store: MongoStore.create({ mongoUrl: "mongodb://127.0.0.1:27017/wetube" }),
   })
 );
 app.use(localsMiddleware);
