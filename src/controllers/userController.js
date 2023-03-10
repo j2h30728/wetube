@@ -1,5 +1,6 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
+import fetch from "node-fetch";
 
 export const getJoin = (req, res) => {
   return res.render("join", { pageTitle: "JOIN" });
@@ -66,7 +67,7 @@ export const postLogin = async (req, res) => {
 export const startGithubLogin = (req, res) => {
   const baseUrl = "https://github.com/login/oauth/authorize";
   const config = {
-    client_id: "4c3405ef73df967b3238",
+    client_id: process.env.GH_CLIENT,
     allow_signup: false,
     scope: "read:user user:email", //여러개의 sope를 받을때는 공백을 넣어줌
   };
@@ -74,7 +75,36 @@ export const startGithubLogin = (req, res) => {
   const finalUrl = `${baseUrl}?${params}`;
   return res.redirect(finalUrl);
 };
-export const finishGithubLogin = (req, res) => res.redirect("/");
+export const finishGithubLogin = async (req, res) => {
+  const baseUrl = "https://github.com/login/oauth/access_token";
+  const config = {
+    client_id: process.env.GH_CLIENT,
+    client_secret: process.env.GH_SECRET,
+    code: req.query.code,
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  const tokenData = await fetch(finalUrl, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+  const tokenRequest = await tokenData.json();
+  if ("access_token" in tokenRequest) {
+    const { access_token } = tokenRequest;
+    const userInfoData = await fetch("https://api.github.com/user", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    const userRequest = await userInfoData.json();
+    console.log(userRequest);
+  } else {
+    return res.redirect("/login");
+  }
+};
 
 export const logout = (req, res) => res.send("log out");
 export const edit = (req, res) => res.send("edit my profile");
