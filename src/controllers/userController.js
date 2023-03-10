@@ -39,7 +39,7 @@ export const postJoin = async (req, res) => {
   }
 };
 export const getLogin = (req, res) =>
-  res.render("login", { pageTitle: "Login" });
+  res.render("login", { pageTitle: "Login", socialOnly: false });
 
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
@@ -111,7 +111,7 @@ export const finishGithubLogin = async (req, res) => {
         },
       })
     ).json();
-
+    console.log(userData);
     //private로 설정되어 userdata에서 받아오지못한 email을 해당 코드를 통해, email list를 불러옴
     const emailData = await (
       await fetch(`${apiUrl}/user/emails`, {
@@ -128,32 +128,32 @@ export const finishGithubLogin = async (req, res) => {
     if (!emailObj) {
       return res.redirect("/login");
     }
-    const existingUser = await User.findOne({ email: emailObj.email });
-    if (existingUser) {
-      req.session.loggedIn = true;
-      req.session.user = existingUser;
-      return res.redirect("/");
-    } else {
+    let user = await User.findOne({ email: emailObj.email });
+    if (!user) {
       // 데이터베이스에 동일한 이메일을 가진 유저가 없을 경우(실제 회원가입/소셜로그인까지 합한것)
-      const newUser = await User.create({
+      user = await User.create({
         name: userData.name ? userData.name : userData.login,
         username: userData.login,
         email: emailObj.email,
         password: "",
         socialOnly: true,
+        avatarUrl: userData.avatar_url ? userData.avatar_url : null,
         location: userData.location,
       });
-      req.session.loggedIn = true;
-      req.session.user = newUser;
-      return res.redirect("/");
     }
+    req.session.loggedIn = true;
+    req.session.user = user;
+    return res.redirect("/");
   } else {
     //엑세스 토큰을 받지못할 경우,
     return res.redirect("/login");
   }
 };
 
-export const logout = (req, res) => res.send("log out");
+export const logout = (req, res) => {
+  req.session.destroy();
+  return res.redirect("/");
+};
 export const edit = (req, res) => res.send("edit my profile");
 export const remove = (req, res) => res.send("remove my profile");
 export const see = (req, res) => res.send("see user");

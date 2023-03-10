@@ -14,7 +14,7 @@ userRouter.get("/logout", logout);
 userRouter.get("/edit", edit);
 userRouter.get("/remove", remove);
 userRouter.get("/github/start", startGithubLogin);
-userRouter.get("/github/finish", finishGithubLogin);
+userRouter.get("/github/finish", finishGithubLogin); //github.com 에서 만든 url path
 userRouter.get("/:id", see);
 
 export default userRouter;
