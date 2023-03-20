@@ -12,6 +12,8 @@ html(lang="ko")
             a(href="/") Home
           if (loggedIn)
             li
+              a(href="/users/edit") Edit profile
+            li
               a(href="/profile") #{ loggedInUser.username }'s profile
             li
               a(href="/users/logout") Logout
