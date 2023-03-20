@@ -157,8 +157,45 @@ export const logout = (req, res) => {
 export const getEdit = (req, res) => {
   return res.render("edit-profile", { pageTitle: "Edit Profile" });
 };
-export const postEdit = (req, res) => {
-  return res.render("edit-profile");
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id, email: originalEmail, username: originUsername },
+    },
+    body: { name, email, username, location },
+  } = req;
+  console.log(originalEmail, email);
+  if (originUsername !== username) {
+    const exists = await User.exists({ username });
+    if (exists) {
+      return res.status(400).render("edit-profile", {
+        pageTitle: "Edit Profile",
+        errorMessage: "이미존재하는 username 입니다.",
+      });
+    }
+  }
+  if (originalEmail !== email) {
+    const exists = await User.exists({ email });
+    if (exists) {
+      return res.status(400).render("edit-profile", {
+        pageTitle: "Edit Profile",
+        errorMessage: "이미존재하는 email 입니다.",
+      });
+    }
+  }
+
+  const updateUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      name,
+      email,
+      username,
+      location,
+    },
+    { new: true }
+  );
+  req.session.user = updateUser;
+  return res.redirect("/users/edit");
 };
 export const remove = (req, res) => res.send("remove my profile");
 export const see = (req, res) => res.send("see user");

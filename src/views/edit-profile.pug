@@ -1,6 +1,8 @@
 extends layout/layout
 
 block content
+  if errorMessage
+    p= errorMessage
   form(method="POST")
     input(
       placeholder="Name",
