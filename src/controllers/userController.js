@@ -183,7 +183,6 @@ export const postEdit = async (req, res) => {
       });
     }
   }
-
   const updateUser = await User.findByIdAndUpdate(
     _id,
     {
@@ -196,6 +195,45 @@ export const postEdit = async (req, res) => {
   );
   req.session.user = updateUser;
   return res.redirect("/users/edit");
+};
+
+export const getChangePassword = (req, res) => {
+  if (req.session.socialOnly === true) {
+    return res.redirect("/");
+  }
+  return res.render("users/change-password", { pageTitle: "Change Password" });
+};
+export const postChangePassword = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { oldPassword, newPassword, newPasswordConfirm },
+  } = req;
+  const user = await User.findById({ _id });
+  const ok = await bcrypt.compare(oldPassword, user.password);
+  if (!ok) {
+    return res.status(404).render("users/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The current password is incorrect.",
+    });
+  }
+  if (oldPassword === newPassword) {
+    return res.status(404).render("users/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The old password equals newpassword.",
+    });
+  }
+  if (newPassword !== newPasswordConfirm) {
+    return res.status(404).render("users/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The password does not match the confirmation.",
+    });
+  }
+  user.password = newPassword;
+  await user.save(); // 비밀번호를 다섯번 해싱하는 pre 함수 트리거시킴 userSchema.pre("save",..)
+  req.session.destroy();
+  return res.redirect("/login");
 };
 export const remove = (req, res) => res.send("remove my profile");
 export const see = (req, res) => res.send("see user");
