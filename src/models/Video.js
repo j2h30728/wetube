@@ -10,6 +10,7 @@ const videoSchema = new mongoose.Schema({
     views: { type: Number, default: 0, required: true },
     rating: { type: Number, default: 0, required: true },
   },
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 // model 이 만들어 지기 전에 미들웨어를 만들어야함

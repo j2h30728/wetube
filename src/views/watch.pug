@@ -4,8 +4,11 @@ block content
   div
     p= video.title
     small= video.createdAt
+    br
+    small 게시자 : #{ owner._id }
   p= video.description
   video(src="/" + video.fileUrl, controls)
-  a(href=`${video.id}/edit`) Edit Video &rarr;
-  br
-  a(href=`${video.id}/delete`) Delete Video &rarr;
+  if (String(video.owner)===String(owner._id))
+    a(href=`${video.id}/edit`) Edit Video &rarr;
+    br
+    a(href=`${video.id}/delete`) Delete Video &rarr;
