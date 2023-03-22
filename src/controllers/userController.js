@@ -1,7 +1,6 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
-import Video from "../models/Video";
 
 export const getJoin = (req, res) => {
   return res.render("join", { pageTitle: "JOIN" });
@@ -215,7 +214,7 @@ export const postChangePassword = async (req, res) => {
     },
     body: { oldPassword, newPassword, newPasswordConfirm },
   } = req;
-  const user = await User.findById({ _id });
+  const user = await User.findById(_id);
   const ok = await bcrypt.compare(oldPassword, user.password);
   if (!ok) {
     return res.status(404).render("users/change-password", {

@@ -14,8 +14,12 @@ const userSchema = new mongoose.Schema({
 });
 
 //save 하기전에 입력한 비밀번호를 5번 해싱하고 저장
+// 여기서 this 는 저장되는 USER객체
 userSchema.pre("save", async function () {
-  this.password = await bcrypt.hash(this.password, 5);
+  if (this.isModified("password")) {
+    //password 가 수정될때만 아래 함수 실행
+    this.password = await bcrypt.hash(this.password, 5);
+  }
 });
 
 const User = mongoose.model("User", userSchema);

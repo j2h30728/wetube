@@ -23,7 +23,7 @@ app.use(
     resave: false, // 세션이 수정되면 데이터베이스에 업데이트함
     saveUninitialized: false, // 세션이 초기화되면 데이터베이스에 저장함
     cookie: {
-      maxAge: 20000, //20초 뒤에 쿠키가 만료됨 === 자동 로그아웃
+      maxAge: 20000000, //20000초 뒤에 쿠키가 만료됨 === 자동 로그아웃
     },
     store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
   })
