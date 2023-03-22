@@ -1,0 +1,7 @@
+extends ../layout/layout
+
+block content
+  h2= loggedInUser.name
+  img(src="/" + loggedInUser.avatarUrl, width="100", height="100")
+  p= loggedInUser.email
+  p= loggedInUser.location
