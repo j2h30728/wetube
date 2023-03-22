@@ -10,12 +10,21 @@ import {
   getChangePassword,
   postChangePassword,
 } from "../controllers/userController";
-import { protectMiddleware, publickOnlyMiddleware } from "./middlewares";
+import {
+  protectMiddleware,
+  publickOnlyMiddleware,
+  uploadFiles,
+} from "./middlewares";
+import { multer } from "multer";
 
 const userRouter = express.Router();
 
 userRouter.get("/logout", protectMiddleware, logout);
-userRouter.route("/edit").all(protectMiddleware).get(getEdit).post(postEdit);
+userRouter
+  .route("/edit")
+  .all(protectMiddleware)
+  .get(getEdit)
+  .post(uploadFiles.single("avatar"), postEdit);
 userRouter
   .route("/change-password")
   .all(protectMiddleware)

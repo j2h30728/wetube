@@ -160,11 +160,14 @@ export const getEdit = (req, res) => {
 export const postEdit = async (req, res) => {
   const {
     session: {
-      user: { _id, email: originalEmail, username: originUsername },
+      user: { _id, email: originalEmail, username: originUsername, avatarUrl },
     },
     body: { name, email, username, location },
+    file,
   } = req;
-  console.log(originalEmail, email);
+  console.log("file", file);
+  console.log("avarturl", avatarUrl);
+
   if (originUsername !== username) {
     const exists = await User.exists({ username });
     if (exists) {
@@ -186,6 +189,7 @@ export const postEdit = async (req, res) => {
   const updateUser = await User.findByIdAndUpdate(
     _id,
     {
+      avatarUrl: file ? file.path : avatarUrl,
       name,
       email,
       username,
@@ -232,7 +236,7 @@ export const postChangePassword = async (req, res) => {
   }
   user.password = newPassword;
   await user.save(); // 비밀번호를 다섯번 해싱하는 pre 함수 트리거시킴 userSchema.pre("save",..)
-  req.session.destroy();
+  req.session.destroy(); // 안전하게 세션을 제거
   return res.redirect("/login");
 };
 export const remove = (req, res) => res.send("remove my profile");
