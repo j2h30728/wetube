@@ -5,7 +5,8 @@ block content
     p= video.title
     small= video.createdAt
     br
-    small 게시자 : #{ video.owner._id }
+    small 게시자 :
+    a(href=`/users/${video.owner._id}`) #{ video.owner.username }
   p= video.description
   video(src="/" + video.fileUrl, controls)
   if loggedInUser && String(video.owner._id) === String(loggedInUser._id)
