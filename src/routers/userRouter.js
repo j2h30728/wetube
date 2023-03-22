@@ -11,11 +11,10 @@ import {
   postChangePassword,
 } from "../controllers/userController";
 import {
+  avartUpload,
   protectMiddleware,
   publickOnlyMiddleware,
-  uploadFiles,
 } from "./middlewares";
-import { multer } from "multer";
 
 const userRouter = express.Router();
 
@@ -24,7 +23,7 @@ userRouter
   .route("/edit")
   .all(protectMiddleware)
   .get(getEdit)
-  .post(uploadFiles.single("avatar"), postEdit);
+  .post(avartUpload.single("avatar"), postEdit);
 userRouter
   .route("/change-password")
   .all(protectMiddleware)

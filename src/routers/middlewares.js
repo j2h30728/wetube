@@ -23,4 +23,15 @@ export const publickOnlyMiddleware = (req, res, next) => {
   }
 };
 
-export const uploadFiles = multer({ dest: "uploads/" });
+export const avartUpload = multer({
+  dest: "uploads/avatars/",
+  limits: {
+    fileSize: 10000000, // 단위는 byte
+  },
+});
+export const videoUpload = multer({
+  dest: "uploads/videos/",
+  limits: {
+    fileSize: 10000000,
+  },
+});

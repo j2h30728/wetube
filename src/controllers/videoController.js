@@ -30,12 +30,16 @@ export const getEdit = async (req, res) => {
 };
 export const postEdit = async (req, res) => {
   const { id } = req.params;
-  const { title, description, hashtags } = req.body;
+  const {
+    file: { path: fileUrl },
+    body: { title, description, hashtags },
+  } = req;
   const video = await Video.exists({ _id: id }).exec();
   if (!video) {
     return res.status(404).render("404", { pageTitle: "Video not found" });
   }
   await Video.findByIdAndUpdate(id, {
+    fileUrl,
     title,
     description,
     hashtags: Video.formatHashTags(hashtags),
@@ -48,9 +52,13 @@ export const getUpload = (req, res) => {
 };
 
 export const postUpload = async (req, res) => {
-  const { title, description, createdAt, hashtags } = req.body;
+  const {
+    file: { path: fileUrl },
+    body: { title, description, hashtags },
+  } = req;
   try {
     await Video.create({
+      fileUrl,
       title,
       description,
       hashtags: Video.formatHashTags(hashtags),

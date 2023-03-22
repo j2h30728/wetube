@@ -4,6 +4,7 @@ block content
   div
     p= video.title
     small= video.createdAt
+  video(src="/" + video.fileUrl, controls)
   a(href=`${video.id}/edit`) Edit Video &rarr;
   br
   a(href=`${video.id}/delete`) Delete Video &rarr;
