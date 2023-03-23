@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "nodemon --exec babel-node src/init.js",
-    "assets": "webpack --config webpack.config.js"
+    "assets": "rimraf assets &&  webpack --config webpack.config.js"
   },
   "author": "",
   "license": "MIT",
