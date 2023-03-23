@@ -30,6 +30,7 @@ app.use(
 );
 app.use(localsMiddleware);
 app.use("/uploads", express.static("uploads")); //uploads 폴더 접근을 허하노라
+app.use("/static", express.static("assets")); //assets 폴더 접근을 허하노라, 이름이 서로 동일할 필요는 없음
 app.use("/", rootRouter);
 app.use("/users", userRouter);
 app.use("/videos", videoRouter);
