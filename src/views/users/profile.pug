@@ -2,12 +2,14 @@ extends ../layout/layout
 include ../mixins/video
 
 block content
-  h2= user.name
-  img(src="/" + user.avatarUrl, width="100", height="100")
-  p= user.email
-  p= user.location
-
-  each video in user.videos 
-    +video(video)
-  else
-    li Sorry nothing found.
+  .profile__data
+    if loggedInUser.socialOnly
+      img.avatar(src=user.avatarUrl)
+    else
+      img.avatar(src="/" + user.avatarUrl)
+    h3= user.name
+  .video-grid
+    each video in user.videos
+      +video(video)
+    else
+      span.empty__message No videos found

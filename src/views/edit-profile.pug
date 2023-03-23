@@ -1,10 +1,7 @@
 extends layout/layout
 
 block content
-  if errorMessage
-    p= errorMessage
-  img(src="/" + loggedInUser.avatarUrl, width="100", height="100")
-  form(method="POST", enctype="multipart/form-data")
+  form.edit-profile__form(method="POST", enctype="multipart/form-data")
     label(for="avatar") Avatar
     input#avart(type="file", name="avatar", accept="image/*")
     input(
@@ -33,5 +30,5 @@ block content
       value=loggedInUser.location)
     input(type="submit", value="Update Profile")
     if !loggedInUser.socialOnly
-      hr
-      a(href="change-password") Change password &rarr;
+      .edit-profile__password
+        a(href="change-password") Change Password &rarr;
