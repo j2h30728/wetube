@@ -8,7 +8,8 @@
     "url": "git+https://github.com/j2h30728/wetube.git"
   },
   "scripts": {
-    "dev": "nodemon --exec babel-node src/init.js"
+    "dev": "nodemon --exec babel-node src/init.js",
+    "assets": "webpack --config webpack.config.js"
   },
   "author": "",
   "license": "MIT",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/j2h30728/wetube#readme",
   "dependencies": {
+    "babel-loader": "^9.1.2",
     "bcrypt": "^5.1.0",
     "connect-mongo": "^4.6.0",
     "dotenv": "^16.0.3",
@@ -34,6 +36,8 @@
     "@babel/preset-env": "^7.20.2",
     "@prettier/plugin-pug": "^2.4.1",
     "nodemon": "^2.0.20",
-    "prettier": "^2.8.4"
+    "prettier": "^2.8.4",
+    "webpack": "^5.76.3",
+    "webpack-cli": "^5.0.1"
   }
 }
