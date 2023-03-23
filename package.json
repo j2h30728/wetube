@@ -8,8 +8,8 @@
     "url": "git+https://github.com/j2h30728/wetube.git"
   },
   "scripts": {
-    "dev": "nodemon --exec babel-node src/init.js",
-    "assets": "rimraf assets &&  webpack --config webpack.config.js"
+    "dev:server": "nodemon",
+    "dev:assets": "rimraf assets &&  webpack"
   },
   "author": "",
   "license": "MIT",
