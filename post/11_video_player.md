@@ -48,13 +48,14 @@ HTMLVideoElement 와 HTMLAudioElement (en-US) 는 이 인터페이스를 상속�
 - `HTMLMediaElement.paused` : 미디어 일시정지 여부를 boolean 값으로 반환 함
 - `HTMLMediaElement.volume` : 오디오 볼륨을 double 값으로 반환. 0.0(무음)에서 1.0(최대크기) 사이 값을 가짐
 - `HTMLMediaElement.muted` : 오디오 음소거 여부를 boolean 값으로 반환함. 음소거라면 true, 반대는 false를 반환함
+- `HTMLMediaElement.duration` : 미디어 전체 길이를 초단위로 double값으로 반환. 재생 가능한 미디어가 없을 경우 0으로 반환함
 
 #### 메서드 Method
 
 - `HTMLMediaElement.pause()` : 미디어 재생을 일시정지함
 - `HTMLMediaElement.play()` : 미디어 재생함
 
-#### 이벤트
+#### HTMLMediaElement 이벤트
 
 - `ended` : `(<audio> or <video>)` 미디어가 끝까지 재생 완료 된 시점에 발생
 - `pause` : 미디어 일시 정지를 요청하고 paused 상태로 진입하는 시점에 발생. 일반적으로 `HTMLMediaElement.pause()` 메소드가 호출되는 시점
@@ -73,17 +74,69 @@ HTMLMediaElement와 HTMLElement를 상속함
 
 [`input type="range`"에 사용 가능한 이벤트 (change, input)](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range)
 
-이벤트: `change`
-change 이벤트는 요소 변경이 끝나면 발생
-텍스트 입력 요소인 경우에는 요소 변경이 끝날 때가 아니라 포커스를 잃을 때 이벤트가 발생
+#### input rage 이벤트
 
-이벤트: `input`
-input 이벤트는 사용자가 값을 수정할 때마다 발생
-키보드 이벤트와 달리 input 이벤트는 어떤 방법으로든 값을 변경할 때 발생
+- `change`
+  change 이벤트는 요소 변경이 끝나면 발생
+  텍스트 입력 요소인 경우에는 요소 변경이 끝날 때가 아니라 포커스를 잃을 때 이벤트가 발생
+  (마우스클릭을 똈을 떼, 드래그를 풀었을 때)
+
+- `input`
+  input 이벤트는 사용자가 값을 수정할 때마다 발생
+  키보드 이벤트와 달리 input 이벤트는 어떤 방법으로든 값을 변경할 때 발생
 
 ## 11.4 Duration and Current Time
 
+#### HTMLMediaElement 속성 properties
+
+- `HTMLMediaElement.duration` : 미디어 전체 길이를 초단위로 double값으로 반환. 재생 가능한 미디어가 없을 경우 0으로 반환함
+- `HTMLMediaElement.currentTime` : 비디오가 현재 플레이 되고있는 시간
+
+#### HTMLMediaElement 이벤트
+
+loaded meta data
+
+- `meta data`
+
+  - 비디오를 제외한 모든것(비디오의 시간, 가로세로크기)
+  - 비디오에서 움직이는 이미지들을 제외한 모든 엑스트라들
+
+- `loadeddata`
+  미디어의 첫번째 프레임이 로딩 완료된 시점에 발생
+
+- `timeupdate`
+  currentTime 속성이 변경되는 시점에 발생 : 비디오 시간이 변할 대마다 발생함
+
+[이벤트 발생순서](https://developer.mozilla.org/ko/docs/Web/API/HTMLMediaElement#%EC%9D%B4%EB%B2%A4%ED%8A%B8)
+loadedmetadata -> loadeddata -> canplay -> canplaythrough
+
 ## 11.5 Time Formatting
+
+[`String.prototype.substring()`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/String/substring) :string 객체의 시작 인덱스로 부터 종료 인덱스 전 까지 문자열의 부분 문자열을 반환
+
+```js
+const str = "Mozilla";
+
+console.log(str.substring(1, 3));
+// Expected output: "oz"
+
+console.log(str.substring(2));
+// Expected output: "zilla"
+```
+
+```js
+const formatTime = seconds =>
+  new Date(seconds * 1000).toISOString().substring(11, 19);
+
+const handleLoadedMetadata = () => {
+  totalTime.innerText = formatTime(Math.floor(video.duration)); // 비디오의 전체길이
+  //00:00:00
+};
+const handleTimeUpdate = () => {
+  currentTime.innerText = formatTime(Math.floor(video.currentTime)); // 비디오의 현재 플레이되고있는 시간
+  //00:00:29
+};
+```
 
 ## 11.6 Timeline
 
