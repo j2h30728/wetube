@@ -140,12 +140,62 @@ const handleTimeUpdate = () => {
 
 ## 11.6 Timeline
 
+```pug
+input#timeLine(type="range", value="0", step="0.1", min="0")
+```
+
+```js
+const handleLoadedMetadata = () => {
+  timeLine.max = Math.floor(video.duration); //로딩되고 비디오 전체길이를 timeLine 최댓값으로 적용
+};
+const handleTimeUpdate = () => {
+  timeLine.value = Math.floor(video.currentTime); // timeLine값을 변경할때 알맞게 비디오 현재시간을 변경
+};
+const handleTimeLineChange = event => {
+  const {
+    target: { value }, // rage input Value 뽑아오기
+  } = event;
+  video.currentTime = value; // rage input값을 변경할때마다 비디오 현재시각에 맞추어 현재 재생시간을 변경
+  video.play(); // 현재 재생시간 변경하고 바로비디오 재생 (디폴트 값은 일시정지)
+};
+```
+
 ## 11.7 Fullscreen
+
+#### [Fullscreen API](https://developer.mozilla.org/ko/docs/Web/API/Fullscreen_API)
+
+Fullscreen API 는 특정 요소 Element(와 해당 자손들을)를 full-screen mode로 표시하고, 더 이상 필요하지 않으면 full-screen mode를 종료하는 메서드를 추가합니다.
+
+- `Element.requestFullscreen()`
+  유저 에이전트가 지정한 요소(그리고 그 자손들까지)를 full-screen mode로 설정하고, 브라우저의 모든 UI 요소와 다른 모든 애플리케이션을 화면에서 제거하도록 요구함.
+  full-screen mode가 활성화되면 Promise resolved를 반환함.
+
+- `Document.exitFullscreen()`
+  user agent 가 full-screen mode에서 창 모드로 다시 전환되도록 요청함.
+  full-screen mode가 완전히 종료되면 Promise resolved 를 반환함.
+
+- `DocumentOrShadowRoot.fullscreenElement` (사용 추천)
+  fullscreenElement 속성은 DOM(혹은 shadow DOM)에서 현재 full-screen mode로 표시되는 요소Element를 알려줌. 이것이 null인 경우, document는 full-screen mode이 아님.
 
 ## 11.8 Controls Events part One
 
 ## 11.9 Controls Events part Two
 
 ## 11.10 Recap
+
+```js
+const handlePlayWithSpacebar = event => {
+  if (event.code === "Space") {
+    handlePlayClick();
+  }
+};
+const handleMuteWithM = event => {
+  if (event.code === "KeyM") {
+    handleMuteClick();
+  }
+};
+document.addEventListener("keyup", handlePlayWithSpacebar); // spacebar 누르면 재생정지
+document.addEventListener("keyup", handleMuteWithM); // m 누르면 뮤트
+```
 
 ## 11.11 Styles Recap
