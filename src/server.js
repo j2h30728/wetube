@@ -6,6 +6,7 @@ import userRouter from "./routers/userRouter";
 import session from "express-session";
 import { localsMiddleware } from "./routers/middlewares";
 import MongoStore from "connect-mongo";
+import apiRouter from "./routers/apiRouter";
 
 const app = express();
 const logger = morgan("dev");
@@ -34,5 +35,6 @@ app.use("/static", express.static("assets")); //assets 폴더 접근을 허하�
 app.use("/", rootRouter);
 app.use("/users", userRouter);
 app.use("/videos", videoRouter);
+app.use("/api", apiRouter);
 
 export default app;

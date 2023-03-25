@@ -183,6 +183,8 @@ Fullscreen API 는 특정 요소 Element(와 해당 자손들을)를 full-screen
 
 ## 11.10 Recap
 
+키보드로 동영상 조작하기
+
 ```js
 const handlePlayWithSpacebar = event => {
   if (event.code === "Space") {

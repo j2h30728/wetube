@@ -110,15 +110,22 @@ const handleMuteWithM = event => {
     handleMuteClick();
   }
 };
+const handleEnded = () => {
+  const { id } = videoContainer.dataset;
+  fetch(`/api/videos/${id}/view`, {
+    method: "POST",
+  });
+};
 playBtn.addEventListener("click", handlePlayClick);
 video.addEventListener("click", handlePlayClick); //비디오만 눌러도 재생
 muteBtn.addEventListener("click", handleMuteClick);
 volumeRange.addEventListener("input", handleVolumeChange);
-video.addEventListener("loadeddata", handleLoadedMetadata); //비디오외의 것이 로딩되면
+video.addEventListener("loadedmetadata", handleLoadedMetadata); //비디오외의 것이 로딩되면
 video.addEventListener("timeupdate", handleTimeUpdate); //재생될때 (video.currentTime 이 변경될때)
+video.addEventListener("ended", handleEnded);
 videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
 timeline.addEventListener("input", handleTimeLineChange); // 타임라인 레인지바를 움직일때
 fullScreenBtn.addEventListener("click", handleFullScreen);
-document.addEventListener("keyup", handlePlayWithSpacebar);
-document.addEventListener("keyup", handleMuteWithM);
+document.addEventListener("keyup", handlePlayWithSpacebar); // spacebar 누르면 재생정지
+document.addEventListener("keyup", handleMuteWithM); // m 누르면 뮤트
