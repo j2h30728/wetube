@@ -1,4 +1,5 @@
 import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
+
 const startBtn = document.getElementById("startBtn");
 const video = document.getElementById("preview");
 
@@ -8,7 +9,9 @@ let videoFile;
 
 const handleDownload = async () => {
   //1
-  const ffmpeg = createFFmpeg({ log: true }); // { log: true } : 무슨일이 벌어지고 있는지 콘솔에서 확인하고 싶음
+  const ffmpeg = createFFmpeg({
+    log: true,
+  }); // { log: true } : 무슨일이 벌어지고 있는지 콘솔에서 확인하고 싶음
   await ffmpeg.load(); //사용자가 소프트웨를 사용할 것이기 때문. 사용자가 무언가를 설치해서 javascript 가 아닌 코드를 사용함.
   //== 우리 웹사이트에서 다른 프로그램을 사용함. 소프트웨어가 무거울 수 있기때문에 기다려 줘야함
 
@@ -21,11 +24,12 @@ const handleDownload = async () => {
   //binary data = 상상을 파일을 만드려면 0과1의 정보를 줘야함  === videoFile(Blob:....)
   //await fetchFile(videoFile) 을 통해 videoFile을 페칭하고있음
   //videoRecorder에서 온 데이터를 가지고 fetchFile(vidoeFile) 을 통해 파일을 만들어 냄
-  ffmpeg.FS("writeFile", "roecording.webm", await fetchFile(videoFile));
+  ffmpeg.FS("writeFile", "recording.webm", await fetchFile(videoFile));
 
   // '-i' == input
   // 가상컴퓨터에 이미 존재하는 "recording.webm"을 파일을 input으로 받고 "output.mp4"로 변환됨
-  await ffmpeg.run("-i", "roecording.webm", "-r", "60", "output.mp4");
+  //  "-r", "60", : 영상을 초당 60프레임으로 인코딩해주는 명령. 더 빠른 영상 인코딩을 가능하게 해줌
+  await ffmpeg.run("-i", "recording.webm", "-r", "60", "output.mp4");
 
   const a = document.createElement("a");
   a.href = videoFile;

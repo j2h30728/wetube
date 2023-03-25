@@ -18,6 +18,12 @@ app.use(logger);
 app.use(express.urlencoded({ extended: true })); // application/x-www-form-urlencoded파싱 (form데이터 파싱) : 미들웨어는 라우터 전에 작성되어야함 (videoRouter을 겨냥)
 // request.body 존재 하기 시작 - videoRouter에서 post 요청보낸 내용이 담겨져있음
 
+//Uncaught (in promise) ReferenceError: SharedArrayBuffer is not defined 오류 해결 방법
+app.use((req, res, next) => {
+  res.header("Cross-Origin-Embedder-Policy", "require-corp");
+  res.header("Cross-Origin-Opener-Policy", "same-origin");
+  next();
+});
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,
@@ -29,6 +35,7 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
   })
 );
+
 app.use(localsMiddleware);
 app.use("/uploads", express.static("uploads")); //uploads 폴더 접근을 허하노라
 app.use("/static", express.static("assets")); //assets 폴더 접근을 허하노라, 이름이 서로 동일할 필요는 없음
