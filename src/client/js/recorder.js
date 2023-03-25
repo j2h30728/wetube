@@ -31,6 +31,21 @@ const handleDownload = async () => {
   //  "-r", "60", : 영상을 초당 60프레임으로 인코딩해주는 명령. 더 빠른 영상 인코딩을 가능하게 해줌
   await ffmpeg.run("-i", "recording.webm", "-r", "60", "output.mp4");
 
+  // 썸네일 제작
+  // '-ss' : 영상의 특정 시간대로 갈 수 있게해줌
+  // "-ss", "00:00:01", : 영상의 1초로 가겠다!
+  // "-frames:v", "1" : 첫 프레임의 스크린샷을 찍어달라/ 이동한 시간의 스크린샷 한장 찍기
+  //  "thumbnail.jpg" 로 파일이 만들어지고 이 파일은 파일시스템(FS)의 메모리에 만들어짐 == "[fferr]       encoder         : Lavc58.91.100 mjpeg"
+  await ffmpeg.run(
+    "-i",
+    "recording.webm",
+    "-ss",
+    "00:00:01",
+    "-frames:v",
+    "1",
+    "thumbnail.jpg"
+  );
+
   //.mp4 로 변환한 파일 가져오기
   //브라우저가 아닌 컴퓨터에서 작업하는 것과 비슷함
   // 파일시스템에서 생성된 파일을 읽어들임
@@ -39,11 +54,21 @@ const handleDownload = async () => {
   const mp4Blob = new Blob([mp4File.buffer], { type: "video/mp4" }); // 불러온 output.mp4 버퍼데이터를 mp4 타입의 Blob 생성
   const mp4Url = URL.createObjectURL(mp4Blob); //Blob URL 생성 -> file 다운 가능해짐
 
+  const thumbFile = ffmpeg.FS("readFile", "thumbnail.jpg");
+  const thumbBlob = new Blob([thumbFile.buffer], { type: "image/jpg" });
+  const thumbUrl = URL.createObjectURL(thumbBlob);
+
   const a = document.createElement("a");
   a.href = mp4Url;
   a.download = "MyRecording.mp4";
   document.body.appendChild(a);
   a.click(); // 사용자가 우클릭해서 영상저장하기 행동을 대신해주는 것
+
+  const thumbA = document.createElement("a");
+  thumbA.href = thumbUrl;
+  thumbA.download = "MyThumbnail.jpg";
+  document.body.appendChild(thumbA);
+  thumbA.click();
 };
 const handleStop = () => {
   startBtn.innerText = "Download Recording";
