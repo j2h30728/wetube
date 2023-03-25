@@ -7,6 +7,7 @@ import session from "express-session";
 import { localsMiddleware } from "./routers/middlewares";
 import MongoStore from "connect-mongo";
 import apiRouter from "./routers/apiRouter";
+import flash from "express-flash";
 
 const app = express();
 const logger = morgan("dev");
@@ -36,7 +37,7 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
   })
 );
-
+app.use(flash());
 app.use(localsMiddleware);
 app.use("/uploads", express.static("uploads")); //uploads 폴더 접근을 허하노라
 app.use("/static", express.static("assets")); //assets 폴더 접근을 허하노라, 이름이 서로 동일할 필요는 없음

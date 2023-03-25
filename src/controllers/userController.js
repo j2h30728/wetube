@@ -152,6 +152,7 @@ export const finishGithubLogin = async (req, res) => {
 
 export const logout = (req, res) => {
   req.session.destroy();
+  req.flash("info", "Bye Bye");
   return res.redirect("/");
 };
 export const getEdit = (req, res) => {
@@ -203,6 +204,7 @@ export const postEdit = async (req, res) => {
 
 export const getChangePassword = (req, res) => {
   if (req.session.socialOnly === true) {
+    req.flash("error", "Can't change password.");
     return res.redirect("/");
   }
   return res.render("users/change-password", { pageTitle: "Change Password" });
@@ -237,6 +239,7 @@ export const postChangePassword = async (req, res) => {
   user.password = newPassword;
   await user.save(); // 비밀번호를 다섯번 해싱하는 pre 함수 트리거시킴 userSchema.pre("save",..)
   req.session.destroy(); // 안전하게 세션을 제거
+  req.flash("info", "Password update");
   return res.redirect("/login");
 };
 export const remove = (req, res) => res.send("remove my profile");
