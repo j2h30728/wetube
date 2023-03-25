@@ -31,9 +31,17 @@ const handleDownload = async () => {
   //  "-r", "60", : 영상을 초당 60프레임으로 인코딩해주는 명령. 더 빠른 영상 인코딩을 가능하게 해줌
   await ffmpeg.run("-i", "recording.webm", "-r", "60", "output.mp4");
 
+  //.mp4 로 변환한 파일 가져오기
+  //브라우저가 아닌 컴퓨터에서 작업하는 것과 비슷함
+  // 파일시스템에서 생성된 파일을 읽어들임
+  // 이 파일은 Unit8Array(array of 8-bit undigned integers:양의 정수)타입이 될 것
+  const mp4File = ffmpeg.FS("readFile", "output.mp4"); //output.mp4 파일 불러오기
+  const mp4Blob = new Blob([mp4File.buffer], { type: "video/mp4" }); // 불러온 output.mp4 버퍼데이터를 mp4 타입의 Blob 생성
+  const mp4Url = URL.createObjectURL(mp4Blob); //Blob URL 생성 -> file 다운 가능해짐
+
   const a = document.createElement("a");
-  a.href = videoFile;
-  a.download = "MyRecording.webm";
+  a.href = mp4Url;
+  a.download = "MyRecording.mp4";
   document.body.appendChild(a);
   a.click(); // 사용자가 우클릭해서 영상저장하기 행동을 대신해주는 것
 };
