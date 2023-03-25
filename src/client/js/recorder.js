@@ -83,17 +83,12 @@ const handleDownload = async () => {
   URL.revokeObjectURL(thumbUrl);
   URL.revokeObjectURL(videoFile);
 };
-const handleStop = () => {
-  actionBtn.innerText = "Download Recording";
-  actionBtn.removeEventListener("click", handleStop);
-  actionBtn.addEventListener("click", handleDownload);
-  recorder.stop(); //저장된 데이터의 최종 Blob을 포함하는 datavailable 이벤트가 발생하는 지점에서 기록을 중지함
-};
 
 const handleStart = () => {
-  actionBtn.innerText = "Stop Recording";
+  actionBtn.innerText = "Recording";
+  actionBtn.disabled = true;
   actionBtn.removeEventListener("click", handleStart);
-  actionBtn.addEventListener("click", handleStop);
+
   recorder = new window.MediaRecorder(stream, { mimeType: "video/webm" }); //  record할 MediaStream이 지정된 MEdiaRecorder개체 만듬
 
   //MediaRecorder.stop()이 호출되면 녹화가 시작된 이후 또는 datavailable 이벤트가 발생한
@@ -105,15 +100,25 @@ const handleStart = () => {
     video.src = videoFile;
     video.loop = true;
     video.play();
+
+    actionBtn.innerText = "Download";
+    actionBtn.disabled = false;
+    actionBtn.addEventListener("click", handleDownload);
   };
   recorder.start(); // 기록 시작,
+  setTimeout(() => {
+    recorder.stop();
+  }, 5000);
 };
 
 const init = async () => {
   try {
     stream = await navigator.mediaDevices.getUserMedia({
       audio: false, //녹음
-      video: true, //카메라 화면
+      video: {
+        width: 1024,
+        height: 576,
+      }, //카메라 화면
     });
     /* 스트림 사용 */
     video.srcObject = stream;
