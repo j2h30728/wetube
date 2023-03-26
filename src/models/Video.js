@@ -10,7 +10,18 @@ const videoSchema = new mongoose.Schema({
   meta: {
     views: { type: Number, default: 0, required: true },
   },
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+    required: true,
+  },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+  ],
 });
 
 // model 이 만들어 지기 전에 미들웨어를 만들어야함

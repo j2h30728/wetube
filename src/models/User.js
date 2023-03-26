@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
   avatarUrl: String,
   location: String,
   videos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Video" }],
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 //save 하기전에 입력한 비밀번호를 5번 해싱하고 저장

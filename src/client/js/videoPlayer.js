@@ -112,6 +112,7 @@ const handleMuteWithM = event => {
 };
 const handleEnded = () => {
   const { id } = videoContainer.dataset;
+  console.log(`/api/videos/${id}/view`);
   fetch(`/api/videos/${id}/view`, {
     method: "POST",
   });

@@ -26,6 +26,9 @@ app.use(logger);
 app.use(express.urlencoded({ extended: true })); // application/x-www-form-urlencoded파싱 (form데이터 파싱) : 미들웨어는 라우터 전에 작성되어야함 (videoRouter을 겨냥)
 // request.body 존재 하기 시작 - videoRouter에서 post 요청보낸 내용이 담겨져있음
 
+// headers: { "Content-type": "application/json" }`인 request만 `express.json()`을 실행 (string => json)
+app.use(express.json());
+
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,
