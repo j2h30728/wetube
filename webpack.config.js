@@ -9,7 +9,6 @@ module.exports = {
     recorder: BASE_JS + "recorder.js",
     commentSection: BASE_JS + "commentSection.js",
   },
-  mode: "development",
   plugins: [new MiniCssExtraPlugin({ filename: "css/styles.css" })],
   output: {
     filename: "js/[name].js",
@@ -33,10 +32,4 @@ module.exports = {
       },
     ],
   },
-  watch: true,
 };
-// watchOptions: {
-//   ignored: /node_modules/,
-//   aggregateTimeout: 5000,
-//   poll: 1000,
-// },
